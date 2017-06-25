@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : mochila.cpp
-// Author      : Raí Soledade
+// Author      : RaÃ­ Soledade
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
