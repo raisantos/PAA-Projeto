@@ -8,110 +8,105 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 class Acao{
 
 private:
-	int codigo;
-	float valor;
-	int porcentagem;
+	string codigo;
+	int valor;
+	float porcentagem;
 
 public:
 	Acao(){
 	};
 
-	Acao(int codigo, float valor, int porcentagem){
+	Acao(string codigo, int valor, float porcentagem){
 		this->codigo = codigo;
 		this->valor = valor;
 		this->porcentagem = porcentagem;
 	};
 
-	int getCodigo(){
+	string getCodigo(){
 		return codigo;
 	}
 
-	void setCodigo(int codigo){
+	void setCodigo(string codigo){
 		this->codigo = codigo;
 	}
 
-	float getValor(){
+	int getValor(){
 		return valor;
 	}
 
-	void setValor(float valor){
+	void setValor(int valor){
 		this->valor = valor;
 	}
 
-	int getPorcentagem(){
+	float getPorcentagem(){
 		return porcentagem;
 	}
 
-	void setPorcentagem(int porcentagem){
+	void setPorcentagem(float porcentagem){
 		this->porcentagem = porcentagem;
 	}
 };
 
-int particao(vector<Acao> &list, int start, int end){
-	Acao pivot;
-	pivot = list[end];
-	int bottom = start-1;
-	int top = end;
+int particao(vector<Acao> &vetor, int p, int r){
+	Acao aux;
+	aux = vetor[r];
+	int base = p-1, topo = r; bool continuar = false;
 
-	bool done = false;
-	while (!done){
-
-		while (!done){
-			bottom = bottom + 1;
-
-			if (bottom == top){
-		       	done = true;
+	while (!continuar){
+		while (!continuar){
+			base = base + 1;
+			if (base == topo){
+		       	continuar = true;
 	            break;
 	        }
-			if (list[bottom].getPorcentagem() > pivot.getPorcentagem()){
-	    	   list[top] = list[bottom];
+			if (vetor[base].getPorcentagem() > aux.getPorcentagem()){
+	    	   vetor[topo] = vetor[base];
 	    	   break;
 			}
 		}
-		while (!done){
-			top = top-1;
-
-	        if (top == bottom){
-	        	done = 1;
+		while (!continuar){
+			topo = topo-1;
+	        if (topo == base){
+	        	continuar = 1;
 			    break;
 			}
-
-	        if (list[top].getPorcentagem() < pivot.getPorcentagem()){
-			    list[bottom] = list[top];
+	        if (vetor[topo].getPorcentagem() < aux.getPorcentagem()){
+			    vetor[base] = vetor[topo];
 			    break;
 			}
 		}
 	}
-	list[top] = pivot;
-	return top;
+	vetor[topo] = aux;
+	return topo;
 
 }
 
 
-void quicksort(vector<Acao> &list, int start, int end){
-	int split;
-	if(start < end){
-		split = particao(list, start, end);
-		quicksort(list, start, split-1);
-		quicksort(list, split+1, end);
+void quicksort(vector<Acao> &vetor, int p, int r){
+	int q;
+	if(p < r){
+		q = particao(vetor, p, r);
+		quicksort(vetor, p, q-1);
+		quicksort(vetor, q+1, r);
 	}
 }
 
-vector<int> calcula_acoes(int peso_max, vector<Acao> &itens){
+vector<string> calcula_acoes(int peso_max, vector<Acao> &itens){
 	int peso_disponivel = peso_max;
 	quicksort(itens, 0, itens.size()-1);
-	vector<int> acoes_a_comprar;
-	int total = 0;
+	vector<string> acoes_a_comprar;
+	//float total = 0.0;
 
 	for(int i = itens.size()-1; i >= 0; i--){
 		if(itens[i].getValor() <= peso_disponivel){
 			acoes_a_comprar.push_back(itens[i].getCodigo());
-			total = total + itens[i].getPorcentagem();
+			//total = total + itens[i].getPorcentagem();
 			peso_disponivel = peso_disponivel - itens[i].getValor();
 		}
 	}
@@ -120,11 +115,11 @@ vector<int> calcula_acoes(int peso_max, vector<Acao> &itens){
 
 int main() {
 	 vector<Acao> itens;
-	 Acao item1(1, 1.0, 20);
-	 Acao item2(2, 100.0, 10);
-	 Acao item3(3, 18.0, 15);
-	 Acao item4(4, 22.0, 30);
-	 Acao item5(5, 28.0, 50);
+	 Acao item1("A01", 1, 20.35);
+	 Acao item2("A02", 100, 10.25);
+	 Acao item3("A03", 18, 15.19);
+	 Acao item4("A04", 73, 30.66);
+	 Acao item5("A05", 28, 50.55);
 
 	 itens.push_back(item1);
 	 itens.push_back(item2);
@@ -132,15 +127,12 @@ int main() {
 	 itens.push_back(item4);
 	 itens.push_back(item5);
 
-	 vector<int> resp;
+	 vector<string> resp;
 	 resp = calcula_acoes(100, itens);
 
 	 for(int i = 0; i < (int)resp.size(); i++){
-		 cout << resp[i] << " ";
+		 cout << resp[i] << endl;
 	 }
-
-	 //item2.calculaPotencial();
-	 //cout << item2.getPotencial();
 
 	return 0;
 }
