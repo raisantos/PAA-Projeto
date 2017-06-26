@@ -5,7 +5,47 @@
 
 using namespace std;
 
-/*Classe Ação*/
+class Ordenacao{
+	private:
+		void quickSort(vector<string>&, int, int);
+		int particao(vector<string>&, int, int);
+	public:
+		void ordenar(vector<string>&);
+};
+
+int Ordenacao::particao(vector<string> &l, int p, int r){
+	string x = l[p], tmp = l[r+1];
+	l[r+1] = x;
+	int i = p, j = r+1;
+	while( true ){
+		while( l[++i]< x );
+		while( l[--j]> x );
+		if(i<j) swap(l[i], l[j]);
+		else{
+			swap(l[p], l[j]);
+			l[r+1] = tmp;
+			return j;
+		}
+	}
+}
+
+void Ordenacao::quickSort(vector<string> &l, int p, int r){
+	if(p < r){
+		int q = particao(l, p, r);
+		quickSort(l, p, q-1);
+		quickSort(l, q+1, r);
+	}
+}
+
+void Ordenacao::ordenar(vector<string> &l){
+	int tam = l.size()-1;
+	string sentinela;
+	l.push_back(sentinela);
+	quickSort(l, 0, tam);
+	l.pop_back();
+}
+
+/*Classe AÃ§Ã£o*/
 class Acao{
 	private:
 		string codigo;
@@ -93,25 +133,29 @@ void Mochila::resolverMochila(int nitens, int mpeso, vector<Acao> itens){
 void Mochila::listarResultado(int nitens, int mpeso, vector<Acao> itens){
 	int i = nitens;
 	int j = mpeso;
-	vector<int> lista (nitens+1, -1);
+	vector<string> lista;
 	
 	while( (i > 0) && (j > 0 )){
 		
 		if(this->mochila[i][j] != this->mochila[i-1][j]){
-			lista[i] = 1;
+			//lista[i] = 1;
 			Acao acao = itens[i-1];
+			lista.push_back(acao.getCodigo());
 			j = j - acao.getValor();
 			i--;
 		}
 		else{
-			lista[i] = 0;
+			//lista[i] = 0;
 			i--;
 		}
 	}
 	
+	Ordenacao ordenacao;
+	ordenacao.ordenar(lista);
+	
 	for(int i = 0; i < lista.size(); i++){
-		if(lista[i] == 1)
-		cout <<  i << " ";
+		cout << lista[i] << " ";
+		
 	} 	
 	cout << endl;
 }
@@ -145,11 +189,11 @@ void Processamento::entrada(){
 	 /*this->nitens = 5;
 	 this->mpeso = 100;
 	
-	 Acao item1("1", 10.0, 1);
-	 Acao item2("2", 10.0, 10);
-	 Acao item3("3", 300.0, 15);
-	 Acao item4("4", 22.0, 30);
-	 Acao item5("5", 280.0, 50);
+	 Acao item1("A", 10.0, 1);
+	 Acao item2("F", 10.0, 10);
+	 Acao item3("V", 300.0, 15);
+	 Acao item4("D", 22.0, 30);
+	 Acao item5("E", 280.0, 50);
 
 	 this->itens.push_back(item1);
 	 this->itens.push_back(item2);
