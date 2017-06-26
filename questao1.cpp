@@ -102,10 +102,13 @@ public:
 	}
 
 	void calculaDensidade(){
-		float aux = this->percentual/this->valor;
-		aux = aux*100;
+		float aux = this->percentual/(float)this->valor;
+		aux = aux*1000;
 		this->densidade = (int)aux;
 	}
+	/*void calculaDensidade(){
+		this->densidade = int((float(this->percentual))/(int(this->valor))*100);
+	}*/
 };
 
 int particao(vector<Acao> &vetor, int p, int r){
@@ -155,16 +158,34 @@ void quicksort(vector<Acao> &vetor, int p, int r){
 vector<string> calcula_acoes(int peso_max, vector<Acao> &itens){
 	int peso_disponivel = peso_max;
 	quicksort(itens, 0, itens.size()-1);
+	/*for(int i = 0; i < (int)itens.size(); i++){
+		cout << itens[i].getCodigo() << " "<<itens[i].getDensidade() << endl;
+	}*/
 	vector<string> acoes_a_comprar;
 	//int total = 0;
 
-	for(int i = itens.size()-1; i >= 0; i--){
+	bool continuar = true;
+	int i = itens.size()-1;
+	while(continuar){
+		if(itens[i].getValor() <= peso_disponivel){
+			acoes_a_comprar.push_back(itens[i].getCodigo());
+			peso_disponivel = peso_disponivel - itens[i].getValor();
+		}
+		else{
+			continuar = false;
+		}
+		i--;
+	}
+	/*for(int i = itens.size()-1; i >= 0; i--){
 		if(itens[i].getValor() <= peso_disponivel){
 			acoes_a_comprar.push_back(itens[i].getCodigo());
 			//total = total + itens[i].getValor();
 			peso_disponivel = peso_disponivel - itens[i].getValor();
 		}
-	}
+		else{
+			break;
+		}
+	}*/
 	//cout << total;
 	return acoes_a_comprar;
 }
@@ -186,6 +207,10 @@ int main() {
 		 acoes.push_back(acao);
 	 }
 
+	 /*quicksort(acoes, 0, acoes.size()-1);
+	 for(int i = 0; i < (int)acoes.size(); i++){
+	 	cout << acoes[i].getCodigo() << " "<< acoes[i].getDensidade() << endl;
+	 }*/
 
 	 resp = calcula_acoes(heranca, acoes);
 
