@@ -11,21 +11,62 @@
 #include <string>
 using namespace std;
 
+class Ordenacao{
+	private:
+		void quickSort(vector<string>&, int, int);
+		int particao(vector<string>&, int, int);
+	public:
+		void ordenar(vector<string>&);
+};
+
+int Ordenacao::particao(vector<string> &l, int p, int r){
+	string x = l[p], tmp = l[r+1];
+	l[r+1] = x;
+	int i = p, j = r+1;
+	while( true ){
+		while( l[++i]< x );
+		while( l[--j]> x );
+		if(i<j) swap(l[i], l[j]);
+		else{
+			swap(l[p], l[j]);
+			l[r+1] = tmp;
+			return j;
+		}
+	}
+}
+
+void Ordenacao::quickSort(vector<string> &l, int p, int r){
+	if(p < r){
+		int q = particao(l, p, r);
+		quickSort(l, p, q-1);
+		quickSort(l, q+1, r);
+	}
+}
+
+void Ordenacao::ordenar(vector<string> &l){
+	int tam = l.size()-1;
+	string sentinela;
+	l.push_back(sentinela);
+	quickSort(l, 0, tam);
+	l.pop_back();
+}
+
 class Acao{
 
 private:
 	string codigo;
 	int valor;
-	float porcentagem;
+	float percentual;
+	int densidade;
 
 public:
 	Acao(){
 	};
 
-	Acao(string codigo, int valor, float porcentagem){
+	Acao(string codigo, int valor, float percentual){
 		this->codigo = codigo;
 		this->valor = valor;
-		this->porcentagem = porcentagem;
+		this->percentual = percentual;
 	};
 
 	string getCodigo(){
@@ -44,12 +85,26 @@ public:
 		this->valor = valor;
 	}
 
-	float getPorcentagem(){
-		return porcentagem;
+	float getPercentual(){
+		return percentual;
 	}
 
-	void setPorcentagem(float porcentagem){
-		this->porcentagem = porcentagem;
+	void setPercentual(float percentual){
+		this->percentual = percentual;
+	}
+
+	int getDensidade(){
+		return densidade;
+	}
+
+	void setDensidade(int densidade){
+		this->densidade = densidade;
+	}
+
+	void calculaDensidade(){
+		float aux = this->percentual/this->valor;
+		aux = aux*100;
+		this->densidade = (int)aux;
 	}
 };
 
@@ -65,7 +120,7 @@ int particao(vector<Acao> &vetor, int p, int r){
 		       	continuar = true;
 	            break;
 	        }
-			if (vetor[base].getPorcentagem() > aux.getPorcentagem()){
+			if (vetor[base].getDensidade() > aux.getDensidade()){
 	    	   vetor[topo] = vetor[base];
 	    	   break;
 			}
@@ -76,7 +131,7 @@ int particao(vector<Acao> &vetor, int p, int r){
 	        	continuar = 1;
 			    break;
 			}
-	        if (vetor[topo].getPorcentagem() < aux.getPorcentagem()){
+	        if (vetor[topo].getDensidade() < aux.getDensidade()){
 			    vetor[base] = vetor[topo];
 			    break;
 			}
@@ -101,38 +156,72 @@ vector<string> calcula_acoes(int peso_max, vector<Acao> &itens){
 	int peso_disponivel = peso_max;
 	quicksort(itens, 0, itens.size()-1);
 	vector<string> acoes_a_comprar;
-	//float total = 0.0;
+	//int total = 0;
 
 	for(int i = itens.size()-1; i >= 0; i--){
 		if(itens[i].getValor() <= peso_disponivel){
 			acoes_a_comprar.push_back(itens[i].getCodigo());
-			//total = total + itens[i].getPorcentagem();
+			//total = total + itens[i].getValor();
 			peso_disponivel = peso_disponivel - itens[i].getValor();
 		}
 	}
+	//cout << total;
 	return acoes_a_comprar;
 }
 
 int main() {
-	 vector<Acao> itens;
-	 Acao item1("A01", 1, 20.35);
-	 Acao item2("A02", 100, 10.25);
+	 vector<Acao> acoes;
+	 vector<string> resp;
+	 int qtdAcoes, valor, heranca = 100000;
+	 float percentual;
+	 string codigo;
+
+	 cin >> qtdAcoes;
+	 for(int i = 0; i < qtdAcoes; i++){
+		 cin >> codigo;
+		 cin >> valor;
+		 cin >> percentual;
+		 Acao acao(codigo, valor, percentual);
+		 acao.calculaDensidade();
+		 acoes.push_back(acao);
+	 }
+
+
+	 resp = calcula_acoes(heranca, acoes);
+
+	 Ordenacao ordenacao;
+	 ordenacao.ordenar(resp);
+
+	 for(int i = 0; i < (int)resp.size(); i++){
+		 cout << resp[i] << endl;
+	 }
+	 /*for(int j = 0; j < (int)acoes.size(); j++){
+		 cout << acoes[j].getCodigo() << " " << acoes[j].getValor() << " " << acoes[j].getPercentual() << " " << acoes[j].getDensidade() << endl;
+	 }*/
+
+	 /*Acao item2("A02", 100, 200.25);
 	 Acao item3("A03", 18, 15.19);
 	 Acao item4("A04", 73, 30.66);
 	 Acao item5("A05", 28, 50.55);
+
+	 item1.calculaDensidade();
+	 item2.calculaDensidade();
+	 item3.calculaDensidade();
+	 item4.calculaDensidade();
+	 item5.calculaDensidade();
 
 	 itens.push_back(item1);
 	 itens.push_back(item2);
 	 itens.push_back(item3);
 	 itens.push_back(item4);
-	 itens.push_back(item5);
+	 itens.push_back(item5);*/
 
-	 vector<string> resp;
+	 /*vector<string> resp;
 	 resp = calcula_acoes(100, itens);
 
 	 for(int i = 0; i < (int)resp.size(); i++){
 		 cout << resp[i] << endl;
-	 }
+	 }*/
 
 	return 0;
 }
