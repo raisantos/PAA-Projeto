@@ -1,3 +1,4 @@
+
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -293,7 +294,7 @@ class Grafo{
         void mostrarGrafo();
         void limpar();
         void dijkstra(int, int); 
-        void printPath(vector<int> parent, int j);
+        void printPath(vector<int>, int);
 };
 
 
@@ -370,7 +371,7 @@ void Grafo<T>::dijkstra(int inicio, int fim){
 		if(d > dist[u])
 			continue;
 		
-		for(int i = 0; i < (int)listaAdjacencias[u].size(; i++){
+		for(int i = 0; i < (int)listaAdjacencias[u].size(); i++){
 			Par<int, double> v = listaAdjacencias[u][i];
 			
 			if(dist[u] + v.getSegundo() < dist[v.getPrimeiro()]){
@@ -390,7 +391,6 @@ void Grafo<T>::dijkstra(int inicio, int fim){
 template<class T>
 void Grafo<T>::printPath(vector<int> parent, int j)
 {
-    // Base Case : If j is source
     if (parent[j] !=-1)
         printPath(parent, parent[j]);
  
@@ -408,7 +408,8 @@ class Processamento{
 };
 
 void Processamento::entrada(){
-	int u, v, w;
+	int u, v;
+	double w;
 	cin >> this->nPalco >> this->mCaminho;
 	
 	this->show.inicializar(this->nPalco);
