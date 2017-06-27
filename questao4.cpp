@@ -2,7 +2,7 @@
 #include<vector>
 #include<algorithm>
 
-#define INFINITO 1000000000.0
+#define INFINITO 100000000.0
 #define MAXN 100
 
 using namespace std;
@@ -370,7 +370,7 @@ void Grafo<T>::dijkstra(int inicio, int fim){
 		if(d > dist[u])
 			continue;
 		
-		for(int i = 0; i < listaAdjacencias[u].size(); i++){
+		for(int i = 0; i < (int)listaAdjacencias[u].size(; i++){
 			Par<int, double> v = listaAdjacencias[u][i];
 			
 			if(dist[u] + v.getSegundo() < dist[v.getPrimeiro()]){
