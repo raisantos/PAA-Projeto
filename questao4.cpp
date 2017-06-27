@@ -7,7 +7,7 @@
 
 using namespace std;
 
-/*Classe NÛ*/
+/*Classe N√≥*/
 template <class T>
 class No{
 	private:
@@ -237,7 +237,7 @@ void Par<T1, T2>::setSegundo(T2 b){
 	this->segundo = b;
 }
 
-/*Classe VÈrtice*/
+/*Classe V√©rtice*/
 template <class T>
 class Vertice{
     private:
@@ -292,7 +292,8 @@ class Grafo{
         int getQntArestas();
         void mostrarGrafo();
         void limpar();
-        double dijkstra(int); 
+        void dijkstra(int, int); 
+        void printPath(vector<int> parent, int j);
 };
 
 
@@ -313,12 +314,12 @@ void Grafo<T>::inicializar(int n){
     if(n <= 0) return;
     this->qntArestas = 0;
     this->qntVertices = n;
-    this->listaAdjacencias = new vector< Par<int, double> >[n+1];
+    this->listaAdjacencias = new vector< Par<int, double> >[n];
 }
 
 template<class T>
 void Grafo<T>::inserirAresta(int u, int v, double w){
-    if(u<=qntVertices && v<=qntVertices && u>=1 && v>=1){
+    if(u<=qntVertices && v<=qntVertices){
         this->qntArestas++;
         this->listaAdjacencias[u].push_back(Par<int, double>(v, w));
     }
@@ -331,7 +332,7 @@ int Grafo<T>::getQntArestas(){
 
 template<class T>
 void Grafo<T>::mostrarGrafo(){
-    for(int i=1; i<=this->qntVertices; i++){
+    for(int i=0; i<this->qntVertices; i++){
         cout << i << ": ";
         for(int j=0; j<this->listaAdjacencias[i].size(); j++)
             cout << this->listaAdjacencias[i][j].getPrimeiro() << ' ' << this->listaAdjacencias[i][j].getSegundo() << ' ';
@@ -349,14 +350,15 @@ void Grafo<T>::limpar(){
 }
 
 template<class T>
-double Grafo<T>::dijkstra(int inicio){
+void Grafo<T>::dijkstra(int inicio, int fim){
 	
-    vector<int> dist(this->qntVertices+1, INFINITO); //Inicializa o vetor
+    vector<int> dist(this->qntVertices, INFINITO); //Inicializa o vetor
+    vector<int> pai(this->qntVertices, -1); //Inicializa o vetor
     
     FilaDePrioridade<Par <int, double> > fila_prioridade;
     
     fila_prioridade.enfileirar(Par <int, double> (0,inicio));
-    dist[inicio] = 0; //A dist‚ncia dele para ele mesmo È 0
+    dist[inicio] = 0; //A dist√¢ncia dele para ele mesmo √© 0
     
 	while( !fila_prioridade.vazia() ){
 		Par<int, double> frente = fila_prioridade.frente();
@@ -372,13 +374,27 @@ double Grafo<T>::dijkstra(int inicio){
 			Par<int, double> v = listaAdjacencias[u][i];
 			
 			if(dist[u] + v.getSegundo() < dist[v.getPrimeiro()]){
+				
 				dist[v.getPrimeiro()] = dist[u] + v.getSegundo();
+				pai[v.getPrimeiro()] = u;
+				
 				fila_prioridade.enfileirar(Par <int, double> (dist[v.getPrimeiro()], v.getPrimeiro()));
 			}
 		}
 	}
 	
-	return dist[this->qntVertices];
+	printPath(pai, fim);
+}
+
+
+template<class T>
+void Grafo<T>::printPath(vector<int> parent, int j)
+{
+    // Base Case : If j is source
+    if (parent[j] !=-1)
+        printPath(parent, parent[j]);
+ 
+    cout << j << " ";
 }
 
 /*Classe Processamento*/
@@ -396,19 +412,19 @@ void Processamento::entrada(){
 	cin >> this->nPalco >> this->mCaminho;
 	
 	this->show.inicializar(this->nPalco);
-	
+
 	for(int i=0; i<this->mCaminho; i++){
 		cin >> u >> v >> w;
 		this->show.inserirAresta(u, v, w);
 		this->show.inserirAresta(v, u, w); 
 	}
-	this->inicio = 1;
+	
+	cin >> this->inicio >> this->fim;
 }
 
 void Processamento::saida(){
 
-	//this->show.mostrarGrafo();
-	cout << this->show.dijkstra(this->inicio) << endl;
+	this->show.dijkstra(this->inicio, this->fim);
 }
 
 int main(){
