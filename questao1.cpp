@@ -1,9 +1,7 @@
 //============================================================================
-// Name        : mochila.cpp
-// Author      : Raí Soledade
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Name        : questao1.cpp
+// Author      : Raí Santos da Soledade, Juliany Rodrigus Raiol
+// Description : Questao 1
 //============================================================================
 
 #include <iostream>
@@ -106,9 +104,6 @@ public:
 		aux = aux*1000;
 		this->densidade = (int)aux;
 	}
-	/*void calculaDensidade(){
-		this->densidade = int((float(this->percentual))/(int(this->valor))*100);
-	}*/
 };
 
 int particao(vector<Acao> &vetor, int p, int r){
@@ -155,39 +150,24 @@ void quicksort(vector<Acao> &vetor, int p, int r){
 	}
 }
 
-vector<string> calcula_acoes(int peso_max, vector<Acao> &itens){
-	int peso_disponivel = peso_max;
+vector<string> calcula_acoes(int pesoMax, vector<Acao> &itens){
+	int pesoDisponivel = pesoMax;
 	quicksort(itens, 0, itens.size()-1);
-	/*for(int i = 0; i < (int)itens.size(); i++){
-		cout << itens[i].getCodigo() << " "<<itens[i].getDensidade() << endl;
-	}*/
-	vector<string> acoes_a_comprar;
-	//int total = 0;
 
+	vector<string> acoesParaComprar;
 	bool continuar = true;
 	int i = itens.size()-1;
 	while(continuar){
-		if(itens[i].getValor() <= peso_disponivel){
-			acoes_a_comprar.push_back(itens[i].getCodigo());
-			peso_disponivel = peso_disponivel - itens[i].getValor();
+		if(itens[i].getValor() <= pesoDisponivel){
+			acoesParaComprar.push_back(itens[i].getCodigo());
+			pesoDisponivel = pesoDisponivel - itens[i].getValor();
 		}
 		else{
 			continuar = false;
 		}
 		i--;
 	}
-	/*for(int i = itens.size()-1; i >= 0; i--){
-		if(itens[i].getValor() <= peso_disponivel){
-			acoes_a_comprar.push_back(itens[i].getCodigo());
-			//total = total + itens[i].getValor();
-			peso_disponivel = peso_disponivel - itens[i].getValor();
-		}
-		else{
-			break;
-		}
-	}*/
-	//cout << total;
-	return acoes_a_comprar;
+	return acoesParaComprar;
 }
 
 int main() {
@@ -207,11 +187,6 @@ int main() {
 		 acoes.push_back(acao);
 	 }
 
-	 /*quicksort(acoes, 0, acoes.size()-1);
-	 for(int i = 0; i < (int)acoes.size(); i++){
-	 	cout << acoes[i].getCodigo() << " "<< acoes[i].getDensidade() << endl;
-	 }*/
-
 	 resp = calcula_acoes(heranca, acoes);
 
 	 Ordenacao ordenacao;
@@ -220,33 +195,6 @@ int main() {
 	 for(int i = 0; i < (int)resp.size(); i++){
 		 cout << resp[i] << endl;
 	 }
-	 /*for(int j = 0; j < (int)acoes.size(); j++){
-		 cout << acoes[j].getCodigo() << " " << acoes[j].getValor() << " " << acoes[j].getPercentual() << " " << acoes[j].getDensidade() << endl;
-	 }*/
-
-	 /*Acao item2("A02", 100, 200.25);
-	 Acao item3("A03", 18, 15.19);
-	 Acao item4("A04", 73, 30.66);
-	 Acao item5("A05", 28, 50.55);
-
-	 item1.calculaDensidade();
-	 item2.calculaDensidade();
-	 item3.calculaDensidade();
-	 item4.calculaDensidade();
-	 item5.calculaDensidade();
-
-	 itens.push_back(item1);
-	 itens.push_back(item2);
-	 itens.push_back(item3);
-	 itens.push_back(item4);
-	 itens.push_back(item5);*/
-
-	 /*vector<string> resp;
-	 resp = calcula_acoes(100, itens);
-
-	 for(int i = 0; i < (int)resp.size(); i++){
-		 cout << resp[i] << endl;
-	 }*/
 
 	return 0;
 }
