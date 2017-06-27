@@ -1,3 +1,9 @@
+//============================================================================
+// Name        : questao3.cpp
+// Author      : Raí Santos da Soledade, Juliany Rodrigues Raiol
+// Description : Questao 3
+//============================================================================
+
 #include <iostream>
 #include <cstdlib>
 #include <vector>
@@ -7,8 +13,6 @@
 using namespace std;
 
 typedef int Vertice;
-const float INFINITO = LONG_MAX;
-const int INFINITO2 = INT_MAX;
 
 template<class T>
 class Grafo {
@@ -26,10 +30,8 @@ public:
 	void iniciar(int);
 	void preenche();
 	void insere(Vertice, Vertice, float);
-	void destroy();
-	void mostra();
 	int caixeiroViajante(int, vector<int> &);
-	vector<int> johnsonTrotter(int, vector<int> &);
+	float johnsonTrotter(int, vector<int> &);
 
 	vector<vector<T> > getAdj() {
 		return adj;
@@ -72,17 +74,6 @@ void Grafo<T>::preenche() {
 	    for(int j = 0; j < ordem; j++){
 		    adj[i][j] = 0.0;
 		}
-	}
-}
-
-template<class T>
-void Grafo<T>::mostra() {
-    for (int i = 0; i < ordem; i++) {
-	    for(int j = 0; j < ordem; j++){
-	        cout.precision(2);
-		    cout << fixed << adj[i][j] << "   ";
-		}
-		cout << endl;
 	}
 }
 
@@ -157,7 +148,7 @@ void Grafo<T>::inverteSetas(vector<int> &atualPermutacao, vector<int> &setas, in
 }
 
 template<class T>
-vector<int> Grafo<T>::johnsonTrotter(int inicio, vector<int> &lista){
+float Grafo<T>::johnsonTrotter(int inicio, vector<int> &lista){
 	vector<int> atualPermutacao;
 	atualPermutacao = lista;
 
@@ -167,7 +158,7 @@ vector<int> Grafo<T>::johnsonTrotter(int inicio, vector<int> &lista){
 	}
 
 	int maiorMovel;
-	int soma = 0, aux;
+	float soma = 0, aux;
 	vector<int> menorCaminho;
 
 	soma = caixeiroViajante(inicio, atualPermutacao);
@@ -194,7 +185,7 @@ vector<int> Grafo<T>::johnsonTrotter(int inicio, vector<int> &lista){
 			menorCaminho = atualPermutacao;
 		}
 	}
-	return menorCaminho;
+	return soma;
 }
 
 template<class T>
@@ -213,31 +204,32 @@ int Grafo<T>::caixeiroViajante(int inicio, vector<int> &permutacao){
 
 
 int main() {
-    int ordem, tamanho, v1, v2;
-    int peso;
+    int ordem, tamanho, v1, v2, verticeInicial;
+    float peso;
     cin >> ordem;
     cin >> tamanho;
 
-    Grafo<int> gt(ordem+1);
+    Grafo<int> palcos(ordem);
 
     for (int i = 0; i < tamanho; ++i) {
     	cin >> v1;
     	cin >> v2;
     	cin >> peso;
-    	gt.insere(v1,v2,peso);
+    	palcos.insere(v1,v2,peso);
 	}
 
+    cin >> verticeInicial;
     vector<int> lista;
-    vector<int> resp;
-    lista.push_back(2);
-    lista.push_back(3);
-    lista.push_back(4);
+    for (int i = 0; i < ordem; ++i) {
+        if(i != verticeInicial){
+        	lista.push_back(i);
+        }
+    }
 
-    resp = gt.johnsonTrotter(1, lista);
+    float resp;
+    resp = palcos.johnsonTrotter(verticeInicial, lista);
+    cout.precision(1);
+    cout << fixed << resp;
 
-    cout << 1 <<" ";
-    for(int i = 0; i < (int)resp.size(); i++)
-    	cout << resp[i] << " ";
-    cout << 1;
 	return 0;
 }
