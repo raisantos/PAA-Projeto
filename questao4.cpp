@@ -1,3 +1,8 @@
+//============================================================================
+// Name        : questao4.cpp
+// Author      : Raí Santos da Soledade, Juliany Rodrigues Raiol
+// Description : Questao 4
+//============================================================================
 
 #include<iostream>
 #include<vector>
@@ -59,14 +64,14 @@ class FilaDePrioridade{
 	private:
 		int pos;
 		vector<T> minHeap;
-		
+
 		int filhoEsquerda(int);
 		int filhoDireita(int);
 		int pai(int);
 		void inicializar();
 		void heapificaBaixo(int);
 		void heapificaCima();
-	
+
 	public:
 		FilaDePrioridade();
 		void enfileirar(T);
@@ -107,13 +112,13 @@ int FilaDePrioridade<T>::pai(int n){
 template<class T>
 void FilaDePrioridade<T>::heapificaBaixo(int noAtual){
 	int filho, no = noAtual;
-	
+
 	filho = this->filhoEsquerda(noAtual);
 	if(filho != -1 && minHeap[no]>minHeap[filho]) no = filho;
 
 	filho = this->filhoDireita(noAtual);
 	if(filho != -1 && minHeap[no]>minHeap[filho]) no = filho;
-	
+
 	if(no != noAtual){
 		swap(minHeap[noAtual], minHeap[no]);
 		this->heapificaBaixo(no);
@@ -293,7 +298,7 @@ class Grafo{
         int getQntArestas();
         void mostrarGrafo();
         void limpar();
-        void dijkstra(int, int); 
+        void dijkstra(int, int);
         void printPath(vector<int>, int);
 };
 
@@ -352,38 +357,38 @@ void Grafo<T>::limpar(){
 
 template<class T>
 void Grafo<T>::dijkstra(int inicio, int fim){
-	
+
     vector<int> dist(this->qntVertices, INFINITO); //Inicializa o vetor
     vector<int> pai(this->qntVertices, -1); //Inicializa o vetor
-    
+
     FilaDePrioridade<Par <int, double> > fila_prioridade;
-    
+
     fila_prioridade.enfileirar(Par <int, double> (0,inicio));
     dist[inicio] = 0; //A distância dele para ele mesmo é 0
-    
+
 	while( !fila_prioridade.vazia() ){
 		Par<int, double> frente = fila_prioridade.frente();
 		fila_prioridade.desenfileirar();
-		
+
 		int d = frente.getPrimeiro();
 		int u = frente.getSegundo();
-		
+
 		if(d > dist[u])
 			continue;
-		
+
 		for(int i = 0; i < (int)listaAdjacencias[u].size(); i++){
 			Par<int, double> v = listaAdjacencias[u][i];
-			
+
 			if(dist[u] + v.getSegundo() < dist[v.getPrimeiro()]){
-				
+
 				dist[v.getPrimeiro()] = dist[u] + v.getSegundo();
 				pai[v.getPrimeiro()] = u;
-				
+
 				fila_prioridade.enfileirar(Par <int, double> (dist[v.getPrimeiro()], v.getPrimeiro()));
 			}
 		}
 	}
-	
+
 	printPath(pai, fim);
 }
 
@@ -393,7 +398,7 @@ void Grafo<T>::printPath(vector<int> parent, int j)
 {
     if (parent[j] !=-1)
         printPath(parent, parent[j]);
- 
+
     cout << j << " ";
 }
 
@@ -411,15 +416,15 @@ void Processamento::entrada(){
 	int u, v;
 	double w;
 	cin >> this->nPalco >> this->mCaminho;
-	
+
 	this->show.inicializar(this->nPalco);
 
 	for(int i=0; i<this->mCaminho; i++){
 		cin >> u >> v >> w;
 		this->show.inserirAresta(u, v, w);
-		this->show.inserirAresta(v, u, w); 
+		this->show.inserirAresta(v, u, w);
 	}
-	
+
 	cin >> this->inicio >> this->fim;
 }
 
